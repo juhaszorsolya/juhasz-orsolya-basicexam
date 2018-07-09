@@ -1,11 +1,11 @@
 // ide deklaráljátok a függvényeket.
 // 1. feladat
 function advancedBubbleSortForUserDatasByCostInCredits(userDatas) {
-  var i = userDatas.length;
+  var i = userDatas.length - 1;
   while ( i > 0 ) {
     var csere = 0;
     for ( var j = 0; j < i; j++) {
-      if (userDatas[j] > userDatas[j + 1]) {
+      if (parseInt(userDatas[j].cost_in_credits, 10) > parseInt(userDatas[j + 1].cost_in_credits, 10)) {
         [userDatas[j], userDatas[j + 1]] = [userDatas[j + 1], userDatas[j]];
         csere = j;
       }
@@ -17,9 +17,9 @@ function advancedBubbleSortForUserDatasByCostInCredits(userDatas) {
 
 // 2. feladat
 function deleteNullConsumabablesObjects(userDatas) {
-  for ( var k in userDatas) {
-    if (userDatas[k].consumables === null) {
-      delete userDatas[k];
+  for ( var i = 0; i < userDatas.length; i++) {
+    if (userDatas[i].consumables === null) {
+      userDatas.splice(i, 1);
     }
   }
   return userDatas;
@@ -27,50 +27,90 @@ function deleteNullConsumabablesObjects(userDatas) {
 
 // 3.feladat
 function changeNullValueToUnknown(userDatas) {
-  for (var l in userDatas) {
-    if (userDatas[l].id === null) {
-      userDatas[l].id = 'unknown';
+  for (var i = 0; i < userDatas.length; i++) {
+    if (userDatas[i].id === null) {
+      userDatas[i].id = 'unknown';
     }
-    if (userDatas[l].denomination === null) {
-      userDatas[l].denomination = 'unknown';
-    }
-
-    if (userDatas[l].cargo_capacity === null) {
-      userDatas[l].caego_capacity = 'unknown';
+    if (userDatas[i].denomination === null) {
+      userDatas[i].denomination = 'unknown';
     }
 
-    if (userDatas[l].passengers === null) {
-      userDatas[l].passengers = 'unknown';
+    if (userDatas[i].cargo_capacity === null) {
+      userDatas[i].cargo_capacity = 'unknown';
     }
 
-    if (userDatas[l].max_atmosphering_speed === null) {
-      userDatas[l].max_atmosphering_speed = 'unknown';
+    if (userDatas[i].passengers === null) {
+      userDatas[i].passengers = 'unknown';
     }
 
-    if (userDatas[l].crew === null) {
-      userDatas[l].crew = 'unknown';
+    if (userDatas[i].max_atmosphering_speed === null) {
+      userDatas[i].max_atmosphering_speed = 'unknown';
     }
 
-    if (userDatas[l].lengthiness === null) {
-      userDatas[l].lengthiness = 'unknown';
+    if (userDatas[i].crew === null) {
+      userDatas[i].crew = 'unknown';
     }
 
-    if (userDatas[l].model === null) {
-      userDatas[l].model = 'unknown';
+    if (userDatas[i].lengthiness === null) {
+      userDatas[i].lengthiness = 'unknown';
     }
 
-    if (userDatas[l].cost_in_credits === null) {
-      userDatas[l].cost_in_credits = 'unknown';
+    if (userDatas[i].model === null) {
+      userDatas[i].model = 'unknown';
     }
 
-    if (userDatas[l].manufacturer === null) {
-      userDatas[l].manufacturer = 'unknown';
+    if (userDatas[i].cost_in_credits === null) {
+      userDatas[i].cost_in_credits = 'unknown';
     }
 
-    if (userDatas[l].image === null) {
-      userDatas[l].image = 'unknown';
+    if (userDatas[i].manufacturer === null) {
+      userDatas[i].manufacturer = 'unknown';
+    }
+
+    if (userDatas[i].image === null) {
+      userDatas[i].image = 'unknown';
     }
   }
+  return userDatas;
+}
+
+// 5.feladat
+function sumOnePersonCrewShips(userDatas) {
+  var sumShips = 0;
+  for (var i = 0; i < userDatas.length; i++) {
+    if (parseInt(userDatas[i].crew, 10) === 1) {
+      sumShips++;
+    }
+  }
+  return sumShips;
+}
+
+function maxCargoCapacityShip(userDatas) {
+  var maxCapacityShip = userDatas[0];
+  for (var i = 1; i < userDatas.length; i++) {
+    if (parseInt(userDatas[i].cargo_capacity, 10) > parseInt(maxCapacityShip.cargo_capacity, 10)) {
+      maxCapacityShip = userDatas[i];
+    }
+  }
+  return maxCapacityShip.model;
+}
+
+function sumAllPassengers(userDatas) {
+  var sumPassengers = 0;
+  for (var i = 0; i < userDatas.length; i++) {
+    sumPassengers += parseInt(userDatas[i].passengers, 10);
+  }
+  return sumPassengers;
+}
+
+function longestShipImageName(userDatas) {
+  var longestShip = userDatas[0];
+  for (var i = 1; i < userDatas.length; i++) {
+    if (parseInt(userDatas[i].lengthiness, 0) > parseInt(longestShip.lengthiness, 0)) {
+      longestShip = userDatas[i];
+    }
+  }
+  return longestShip.model;
 }
 
 function getData(url, callbackFunc) {
@@ -92,5 +132,10 @@ function successAjax(xhttp) {
   deleteNullConsumabablesObjects(userDatas);
   changeNullValueToUnknown(userDatas);
   console.log(userDatas);
+
+  console.log(sumOnePersonCrewShips(userDatas));
+  console.log(maxCargoCapacityShip(userDatas));
+  console.log(sumAllPassengers(userDatas));
+  console.log(longestShipImageName(userDatas));
 }
 getData('/json/spaceships.json', successAjax);
