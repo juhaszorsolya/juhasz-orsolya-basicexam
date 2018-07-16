@@ -98,7 +98,9 @@ function maxCargoCapacityShip(userDatas) {
 function sumAllPassengers(userDatas) {
   var sumPassengers = 0;
   for (var i = 0; i < userDatas.length; i++) {
-    sumPassengers += parseInt(userDatas[i].passengers, 10);
+    if (Number.isInteger(parseInt(userDatas[i].passengers), 10)) {
+      sumPassengers += parseInt(userDatas[i].passengers, 10);
+    }
   }
   return sumPassengers;
 }
@@ -111,6 +113,18 @@ function longestShipImageName(userDatas) {
     }
   }
   return longestShip.model;
+}
+
+// 7.feladat
+function searchByName(userDatas, name) {
+  var ship = {};
+  for (var i = 0; i < userDatas.length; i++) {
+    var contName = userDatas[i].model.toLowerCase;
+    if (contName.indexOf(name.toLowerCase) > -1) {
+      ship = userDatas[i];
+    }
+  }
+  return ship;
 }
 
 function getData(url, callbackFunc) {
@@ -131,11 +145,22 @@ function successAjax(xhttp) {
   advancedBubbleSortForUserDatasByCostInCredits(userDatas);
   deleteNullConsumabablesObjects(userDatas);
   changeNullValueToUnknown(userDatas);
-  console.log(userDatas);
+  var dataList = document.querySelector('#list-pre');
+  dataList.innerHTML = JSON.stringify(userDatas, null, '\n');
 
-  console.log(sumOnePersonCrewShips(userDatas));
-  console.log(maxCargoCapacityShip(userDatas));
-  console.log(sumAllPassengers(userDatas));
-  console.log(longestShipImageName(userDatas));
+  var statistics = document.querySelector('#statistical-pre');
+  statistics.innerHTML = 'Egy fős (crew = 1) legénységgel rendelkező hajók darabszáma: ' + JSON.stringify(sumOnePersonCrewShips(userDatas, null, '\n'));
+
+  var statistics2 = document.querySelector('#statistical-pre-2');
+  statistics2.innerHTML = 'A legnagyobb cargo_capacity-vel rendelkező hajó neve: ' + JSON.stringify(maxCargoCapacityShip(userDatas, null, '\n'));
+
+  var statistics3 = document.querySelector('#statistical-pre-3');
+  statistics3.innerHTML = 'Az összes hajó utasainak (passengers) összesített száma: ' + JSON.stringify(sumAllPassengers(userDatas, null, '\n'));
+
+  var statistics4 = document.querySelector('#statistical-pre-4');
+  statistics4.innerHTML = 'A leghosszabb(lengthiness) hajó képének a neve: ' + JSON.stringify(longestShipImageName(userDatas, null, '\n'));
+
+  var searchedShip = document.querySelector('.one-spaceship');
+  searchedShip.innerHTML = searchByName(userDatas, document.querySelector('#search-text').value);
 }
 getData('/json/spaceships.json', successAjax);
